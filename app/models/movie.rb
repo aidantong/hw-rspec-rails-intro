@@ -11,7 +11,9 @@ class Movie < ActiveRecord::Base
       end
     end
    
-    def self.find_in_tmdb(search_terms)
+    def self.find_in_tmdb(string,  apikey='0a2500a4a29abadbc52379b3868083b8')
+      Faraday.get(string)
     end
+
 end
   
