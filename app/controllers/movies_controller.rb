@@ -47,7 +47,25 @@ class MoviesController < ApplicationController
     end
     
     def search_tmdb
-      @movies = Movie.find_in_tmdb(params[:search_terms])
+      @movies = nil
+      if params.key?(:from_home)  # came from index.html; do nothing
+        return
+      elsif params[:title] == ""   # no title given
+        flash[:danger] = "Please fill in all required fields"
+      else    # search and alert if no results
+        search_params = Hash.new
+        search_params[:title] = params[:title]
+        search_params[:language] = params[:language]
+        if params[:release_year] != ""
+          search_params[:release_year] = params[:release_year]
+        end
+        @movies = Movie.find_in_tmdb(search_params)
+        if @movies.length() == 0
+          flash[:danger] = "No movies found with given parameters!"
+        end
+        flash[:success] = "Fucking finally"
+      end
+
     end
     
     private

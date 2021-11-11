@@ -12,7 +12,30 @@ class Movie < ActiveRecord::Base
     end
    
     def self.find_in_tmdb(search_params,  apikey='0a2500a4a29abadbc52379b3868083b8')
-      Faraday.get(string)
+      uri = 'https://api.themoviedb.org/3/search/movie?'
+      uri += 'api_key=' + apikey
+      uri += '&query=' + search_params[:title]
+      uri += '&language=' + search_params[:language]
+      if search_params.key?(:release_year)
+        uri += '&primary_release_year' + search_params[:release_year]
+      end 
+      json_res = JSON.parse(Faraday.get(URI::escape(uri)).body)
+      results = json_res['results']
+
+      movies = []
+      if results.length() > 0 
+        results.each do |movie|
+          new_movie = Movie.new
+          new_movie.title = movie['original_title']
+          new_movie.rating = 'R'
+          new_movie.description = movie['overview']
+          new_movie.release_date = Date.parse(movie['release_date'])
+          
+          movies.append(new_movie)
+        end
+      end
+      return movies
+        
       # build url
       # faraday api call
       # filter out moves that we already have
@@ -22,3 +45,9 @@ class Movie < ActiveRecord::Base
 
 end
   
+#        t.string   "title"
+#     t.string   "rating"
+#     t.text     "description"
+#     t.datetime "release_date"
+#     t.datetime "created_at"
+#     t.datetime "updated_at"

@@ -8,9 +8,8 @@ describe Movie do
       Movie.find_in_tmdb('https://cs169.org')
     end
     it 'calls Tmdb with valid API key' do
-     Movie.find_in_tmdb({title: "hacker", language: "en"})
+      Movie.find_in_tmdb({title: "hacker", language: "en"})
     end
-    
   end
 end
 
