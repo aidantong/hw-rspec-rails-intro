@@ -17,7 +17,7 @@ class Movie < ActiveRecord::Base
       uri += '&query=' + search_params[:title]
       uri += '&language=' + search_params[:language]
       if search_params.key?(:release_year)
-        uri += '&primary_release_year' + search_params[:release_year]
+        uri += '&year' + search_params[:release_year].to_s
       end 
       json_res = JSON.parse(Faraday.get(URI::escape(uri)).body)
       results = json_res['results']
@@ -29,7 +29,7 @@ class Movie < ActiveRecord::Base
           new_movie.title = movie['original_title']
           new_movie.rating = 'R'
           new_movie.description = movie['overview']
-          new_movie.release_date = Date.parse(movie['release_date'])
+          new_movie.release_date = movie['release_date']
           
           movies.append(new_movie)
         end

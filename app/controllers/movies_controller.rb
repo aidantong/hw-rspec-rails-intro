@@ -48,7 +48,7 @@ class MoviesController < ApplicationController
     
     def search_tmdb
       @movies = nil
-      if params.key?(:from_home)  # came from index.html; do nothing
+      if params.key?(:landing)  # came from new page; do nothing
         return
       elsif params[:title] == ""   # no title given
         flash[:danger] = "Please fill in all required fields"
@@ -63,10 +63,16 @@ class MoviesController < ApplicationController
         if @movies.length() == 0
           flash[:danger] = "No movies found with given parameters!"
         end
-        flash[:success] = "Fucking finally"
       end
 
     end
+    
+    def add_movie
+      @movie = Movie.create!({title: params[:title], rating: params[:rating], release_date: params[:release_date]})
+      flash[:success] = "#{@movie.title} was successfully added to RottenPotatoes."
+      redirect_to search_tmdb_path({landing: 1})
+    end
+ 
     
     private
   

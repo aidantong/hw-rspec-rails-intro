@@ -32,6 +32,46 @@
   <%= link_to 'Back to movie list', movies_path, class: 'btn btn-primary col-2' %>
   
 <% end %>
-<!-- <%= params.inspect %> -->
+<% if !@movies.nil? and @movies.length > 0 %>
+  <table class="table table-striped col-md-12" id="search_movies">
+    <thead>
+      <tr>
+        <th>Movie Title</th>
+        <th>Rating</th>
+        <th>Release Date</th>
+        <th>Synopsis</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% @movies.each do |movie| %>
+        <tr>
+          <td>
+            <%= movie.title %>
+          </td>
+          <td>
+            <%= movie.rating %>
+          </td>
+          <td>
+            <%= movie.release_date %>
+          </td>
+          <td>
+            <%= movie.description %>
+          </td>
+          <td>
+            <%= form_tag add_movie_path, method: :post, id: 'add_movie_form' do%>
+              <%= hidden_field_tag :title, movie.title %>
+              <%= hidden_field_tag :release_date, movie.release_date %>
+              <%= hidden_field_tag :rating, movie.rating %>
+              <%= hidden_field_tag :description, movie.description %>
+              <%= submit_tag 'Add movie' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+<%= params.inspect %>
 <!-- <%= @movies.inspect %> -->
 </div>
